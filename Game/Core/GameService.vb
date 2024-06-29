@@ -2133,6 +2133,44 @@
         End If
     End Sub
 
+    Private Sub CapturePiece(fromRow As Integer, fromCol As Integer, toRow As Integer, toCol As Integer)
+        ' pawns (capture)
+        If SelectedPiece = "P" OrElse SelectedPiece = "p" Then
+            Dim direction As Integer = If(Player.CurrentPlayer = Player.PlayerType.White, -1, 1)
+            If toRow = fromRow + direction AndAlso
+                   (toCol = fromCol - 1 OrElse toCol = fromCol + 1) Then
+                If Char.IsLower(Board(toRow, toCol)) AndAlso CurrentPlayer = Player.White Then
+                    Board(toRow, toCol) = SelectedPiece
+                    Board(fromRow, fromCol) = "."
+
+                    PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                    PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                    SelectedPiece = Nothing
+                    SelectedRow = -1
+                    SelectedCol = -1
+                    Player.SwitchPlayer()
+                ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso CurrentPlayer = Player.Black Then
+                    Board(toRow, toCol) = SelectedPiece
+                    Board(fromRow, fromCol) = "."
+
+                    PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                    PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                    SelectedPiece = Nothing
+                    SelectedRow = -1
+                    SelectedCol = -1
+                    Player.SwitchPlayer()
+                End If
+
+                UnhighlightPossibleMoves()
+
+                Player.SwitchPlayer()
+                RefreshBoard()
+            End If
+        End If
+    End Sub
+
     Public Sub UpdateCurrentPlayerLabel()
 
     End Sub

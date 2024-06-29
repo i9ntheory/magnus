@@ -2169,6 +2169,8 @@
                 RefreshBoard()
             End If
         End If
+
+
     End Sub
 
     Public Sub UpdateCurrentPlayerLabel()

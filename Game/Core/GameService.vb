@@ -162,8 +162,7 @@
             ' light green color is for highlighted possible moves
             If pb.BackColor = Color.LightGreen Then
                 Debug.WriteLine($"PictureBox_Click: Captured piece: {currentPiece} at ({row}, {col})")
-
-                ' TODO: Implement capturing logic
+                CapturePiece(SelectedRow, SelectedCol, row, col)
 
                 ' add captured piece to the respective list
                 If Char.IsLower(currentPiece) Then
@@ -2139,7 +2138,7 @@
             Dim direction As Integer = If(Player.CurrentPlayer = Player.PlayerType.White, -1, 1)
             If toRow = fromRow + direction AndAlso
                    (toCol = fromCol - 1 OrElse toCol = fromCol + 1) Then
-                If Char.IsLower(Board(toRow, toCol)) AndAlso CurrentPlayer = Player.White Then
+                If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
                     Board(toRow, toCol) = SelectedPiece
                     Board(fromRow, fromCol) = "."
 
@@ -2150,7 +2149,7 @@
                     SelectedRow = -1
                     SelectedCol = -1
                     Player.SwitchPlayer()
-                ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso CurrentPlayer = Player.Black Then
+                ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
                     Board(toRow, toCol) = SelectedPiece
                     Board(fromRow, fromCol) = "."
 
@@ -2170,7 +2169,873 @@
             End If
         End If
 
+        ' rooks (capture)
+        If SelectedPiece = "R" OrElse SelectedPiece = "r" Then
+            ' Check moves to the right
+            If toRow = fromRow AndAlso toCol > fromCol Then
+                Dim validMove As Boolean = True
+                For i As Integer = fromCol + 1 To toCol - 1
+                    If Board(fromRow, i) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
 
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+                    RefreshBoard()
+                End If
+            End If
+
+            ' Check moves to the left
+            If toRow = fromRow AndAlso toCol < fromCol Then
+                Dim validMove As Boolean = True
+                For i As Integer = fromCol - 1 To toCol + 1 Step -1
+                    If Board(fromRow, i) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
+
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+                    RefreshBoard()
+
+                End If
+
+            End If
+
+            ' Check moves upwards
+            If toCol = fromCol AndAlso toRow < fromRow Then
+                Dim validMove As Boolean = True
+                For i As Integer = fromRow - 1 To toRow + 1 Step -1
+                    If Board(i, fromCol) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
+
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+                    RefreshBoard()
+
+                End If
+
+            End If
+
+            ' Check moves downwards
+            If toCol = fromCol AndAlso toRow > fromRow Then
+                Dim validMove As Boolean = True
+                For i As Integer = fromRow + 1 To toRow - 1
+                    If Board(i, fromCol) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
+
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+                    RefreshBoard()
+
+                End If
+            End If
+        End If
+
+        ' bishops (capture)
+        If SelectedPiece = "B" OrElse SelectedPiece = "b" Then
+            ' Check moves to the top right
+            Dim i As Integer = 1
+            While fromRow - i >= 0 AndAlso fromCol + i < Cols
+                If toRow = fromRow - i AndAlso toCol = fromCol + i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow - j, fromCol + j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the top left
+            i = 1
+            While fromRow - i >= 0 AndAlso fromCol - i >= 0
+                If toRow = fromRow - i AndAlso toCol = fromCol - i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow - j, fromCol - j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom right
+            i = 1
+            While fromRow + i < Rows AndAlso fromCol + i < Cols
+                If toRow = fromRow + i AndAlso toCol = fromCol + i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow + j, fromCol + j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom left
+            i = 1
+            While fromRow + i < Rows AndAlso fromCol - i >= 0
+                If toRow = fromRow + i AndAlso toCol = fromCol - i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow + j, fromCol - j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+                End If
+                i += 1
+            End While
+
+        End If
+
+        ' knights (capture)
+        If SelectedPiece = "N" OrElse SelectedPiece = "n" Then
+            Dim possibleMoves = New List(Of Point) From {
+                New Point(fromRow - 2, fromCol - 1),
+                New Point(fromRow - 2, fromCol + 1),
+                New Point(fromRow - 1, fromCol - 2),
+                New Point(fromRow - 1, fromCol + 2),
+                New Point(fromRow + 1, fromCol - 2),
+                New Point(fromRow + 1, fromCol + 2),
+                New Point(fromRow + 2, fromCol - 1),
+                New Point(fromRow + 2, fromCol + 1)
+            }
+
+            If possibleMoves.Contains(New Point(toRow, toCol)) Then
+                If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                    Board(toRow, toCol) = SelectedPiece
+                    Board(fromRow, fromCol) = "."
+
+                    PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                    PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                    SelectedPiece = Nothing
+                    SelectedRow = -1
+                    SelectedCol = -1
+                    Player.SwitchPlayer()
+
+                ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                    Board(toRow, toCol) = SelectedPiece
+                    Board(fromRow, fromCol) = "."
+
+                    PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                    PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                    SelectedPiece = Nothing
+                    SelectedRow = -1
+                    SelectedCol = -1
+                    Player.SwitchPlayer()
+                End If
+
+                UnhighlightPossibleMoves()
+
+                Player.SwitchPlayer()
+                RefreshBoard()
+            End If
+        End If
+
+        ' kings (capture)
+        If SelectedPiece = "K" OrElse SelectedPiece = "k" Then
+            Dim possibleMoves = New List(Of Point) From {
+                New Point(fromRow - 1, fromCol - 1),
+                New Point(fromRow - 1, fromCol),
+                New Point(fromRow - 1, fromCol + 1),
+                New Point(fromRow, fromCol - 1),
+                New Point(fromRow, fromCol + 1),
+                New Point(fromRow + 1, fromCol - 1),
+                New Point(fromRow + 1, fromCol),
+                New Point(fromRow + 1, fromCol + 1)
+            }
+
+            If possibleMoves.Contains(New Point(toRow, toCol)) Then
+                If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                    Board(toRow, toCol) = SelectedPiece
+                    Board(fromRow, fromCol) = "."
+
+                    PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                    PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                    SelectedPiece = Nothing
+                    SelectedRow = -1
+                    SelectedCol = -1
+                    Player.SwitchPlayer()
+
+                ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                    Board(toRow, toCol) = SelectedPiece
+                    Board(fromRow, fromCol) = "."
+
+                    PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                    PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                    SelectedPiece = Nothing
+                    SelectedRow = -1
+                    SelectedCol = -1
+                    Player.SwitchPlayer()
+                End If
+
+                UnhighlightPossibleMoves()
+
+                If Player.CurrentPlayer = Player.PlayerType.White Then
+                    CurrentWhiteKingPosition = {toRow, toCol}
+                Else
+                    CurrentBlackKingPosition = {toRow, toCol}
+                End If
+
+                Player.SwitchPlayer()
+                RefreshBoard()
+            End If
+        End If
+
+        ' queens (capture)
+        If SelectedPiece = "Q" OrElse SelectedPiece = "q" Then
+            ' Check moves to the right
+            If toRow = fromRow AndAlso toCol > fromCol Then
+                Dim validMove As Boolean = True
+                For colIndex As Integer = fromCol + 1 To toCol - 1
+                    If Board(fromRow, colIndex) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
+
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+                    RefreshBoard()
+                End If
+            End If
+
+            ' Check moves to the left
+            If toRow = fromRow AndAlso toCol < fromCol Then
+                Dim validMove As Boolean = True
+                For colIndex As Integer = fromCol - 1 To toCol + 1 Step -1
+                    If Board(fromRow, colIndex) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
+
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+
+                        SelectedCol = -1
+
+                        Player.SwitchPlayer()
+
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+
+                    RefreshBoard()
+
+                End If
+
+            End If
+
+
+            ' Check moves upwards
+            If toCol = fromCol AndAlso toRow < fromRow Then
+                Dim validMove As Boolean = True
+                For colIndex As Integer = fromRow - 1 To toRow + 1 Step -1
+                    If Board(colIndex, fromCol) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
+
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+
+                    RefreshBoard()
+
+                End If
+
+            End If
+
+            ' Check moves downwards
+            If toCol = fromCol AndAlso toRow > fromRow Then
+                Dim validMove As Boolean = True
+                For colIndex As Integer = fromRow + 1 To toRow - 1
+                    If Board(colIndex, fromCol) <> "." Then
+                        validMove = False
+                        Exit For
+                    End If
+                Next
+
+                If validMove Then
+                    If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+
+                    ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+
+                        Board(toRow, toCol) = SelectedPiece
+                        Board(fromRow, fromCol) = "."
+
+                        PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                        PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                        SelectedPiece = Nothing
+                        SelectedRow = -1
+                        SelectedCol = -1
+                        Player.SwitchPlayer()
+                    End If
+
+                    UnhighlightPossibleMoves()
+
+                    Player.SwitchPlayer()
+
+                    RefreshBoard()
+
+                End If
+
+            End If
+
+            ' Check moves to the top right
+            Dim i As Integer = 1
+            While fromRow - i >= 0 AndAlso fromCol + i < Cols
+                If toRow = fromRow - i AndAlso toCol = fromCol + i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow - j, fromCol + j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the top left
+            i = 1
+            While fromRow - i >= 0 AndAlso fromCol - i >= 0
+                If toRow = fromRow - i AndAlso toCol = fromCol - i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow - j, fromCol - j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom right
+            i = 1
+            While fromRow + i < Rows AndAlso fromCol + i < Cols
+                If toRow = fromRow + i AndAlso toCol = fromCol + i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow + j, fromCol + j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom left
+            i = 1
+            While fromRow + i < Rows AndAlso fromCol - i >= 0
+                If toRow = fromRow + i AndAlso toCol = fromCol - i Then
+                    Dim validMove As Boolean = True
+                    For j As Integer = 1 To i - 1
+                        If Board(fromRow + j, fromCol - j) <> "." Then
+                            validMove = False
+                            Exit For
+                        End If
+                    Next
+
+                    If validMove Then
+                        If Char.IsLower(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.White Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+
+                        ElseIf Char.IsUpper(Board(toRow, toCol)) AndAlso Player.CurrentPlayer = Player.PlayerType.Black Then
+                            Board(toRow, toCol) = SelectedPiece
+                            Board(fromRow, fromCol) = "."
+
+                            PictureBoxes(toRow, toCol).Image = GetPieceImage(SelectedPiece)
+                            PictureBoxes(fromRow, fromCol).Image = Nothing
+
+                            SelectedPiece = Nothing
+                            SelectedRow = -1
+                            SelectedCol = -1
+                            Player.SwitchPlayer()
+                        End If
+
+                        UnhighlightPossibleMoves()
+
+                        Player.SwitchPlayer()
+
+                        RefreshBoard()
+                    End If
+
+                    Exit While
+                End If
+                i += 1
+            End While
+
+        End If
     End Sub
 
     Public Sub UpdateCurrentPlayerLabel()

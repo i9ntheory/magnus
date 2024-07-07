@@ -361,18 +361,18 @@
             ' make sure to account for pieces that block the path of the attacking piece
             ' if the king is in check, highlight the king in red
             ' if the king is in checkmate, end the game
-            If pieceKey = "p" OrElse pieceKey = "P" Then
-                ' pawn
-            ElseIf pieceKey = "r" OrElse pieceKey = "R" Then
-                ' rook
-            ElseIf pieceKey = "n" OrElse pieceKey = "N" Then
-                ' knight
-            ElseIf pieceKey = "b" OrElse pieceKey = "B" Then
-                ' bishop
-            ElseIf pieceKey = "q" OrElse pieceKey = "Q" Then
-                ' queen
-            ElseIf pieceKey = "k" OrElse pieceKey = "K" Then
-                ' king
+            If pieceKey = "p" Then
+            ElseIf pieceKey = "r" Then
+            ElseIf pieceKey = "n" Then
+            ElseIf pieceKey = "b" Then
+            ElseIf pieceKey = "q" Then
+            ElseIf pieceKey = "k" Then
+            ElseIf pieceKey = "P" Then
+            ElseIf pieceKey = "R" Then
+            ElseIf pieceKey = "N" Then
+            ElseIf pieceKey = "B" Then
+            ElseIf pieceKey = "Q" Then
+            ElseIf pieceKey = "K" Then
             End If
         Next
     End Sub
@@ -1218,6 +1218,11 @@
     End Sub
 
     Private Sub MovePiece(fromRow As Integer, fromCol As Integer, toRow As Integer, toCol As Integer)
+        ' update the piece information in the AllPieces
+        Dim piece = AllPieces.FirstOrDefault(Function(p) p.Item3 = fromRow AndAlso p.Item4 = fromCol)
+        AllPieces.Remove(piece)
+        AllPieces.Add(New Tuple(Of String, String, Integer, Integer)(SelectedPiece, SelectedPiece, toRow, toCol))
+
         ' white pawn first move (mover)
         If SelectedPiece = "P" AndAlso toRow = fromRow - 2 AndAlso toCol = fromCol Then
             ' Update the board and UI
@@ -2479,9 +2484,15 @@
                 i += 1
             End While
         End If
+
     End Sub
 
     Private Sub CapturePiece(fromRow As Integer, fromCol As Integer, toRow As Integer, toCol As Integer)
+        Dim piece = AllPieces.FirstOrDefault(Function(p) p.Item3 = fromRow AndAlso p.Item4 = fromCol)
+        If piece IsNot Nothing Then
+            AllPieces.Remove(piece)
+        End If
+
         ' pawns (capture)
         If SelectedPiece = "P" OrElse SelectedPiece = "p" Then
             Dim direction As Integer = If(Player.CurrentPlayer = Player.PlayerType.White, -1, 1)

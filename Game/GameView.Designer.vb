@@ -26,6 +26,10 @@ Partial Class GameView
         Me.ExitButton = New System.Windows.Forms.Button()
         Me.RestartButton = New System.Windows.Forms.Button()
         Me.CurrentPlayerLabel = New System.Windows.Forms.Label()
+        Me.WhiteCapturedLabel = New System.Windows.Forms.Label()
+        Me.BlackCapturedLabel = New System.Windows.Forms.Label()
+        Me.WhiteCapturedList = New System.Windows.Forms.Label()
+        Me.BlackCapturedList = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'GamePanel
@@ -62,11 +66,51 @@ Partial Class GameView
         Me.CurrentPlayerLabel.TabIndex = 3
         Me.CurrentPlayerLabel.Text = "Player: White"
         '
+        'WhiteCapturedLabel
+        '
+        Me.WhiteCapturedLabel.AutoSize = True
+        Me.WhiteCapturedLabel.Location = New System.Drawing.Point(455, 93)
+        Me.WhiteCapturedLabel.Name = "WhiteCapturedLabel"
+        Me.WhiteCapturedLabel.Size = New System.Drawing.Size(84, 13)
+        Me.WhiteCapturedLabel.TabIndex = 4
+        Me.WhiteCapturedLabel.Text = "White Captured:"
+        '
+        'BlackCapturedLabel
+        '
+        Me.BlackCapturedLabel.AutoSize = True
+        Me.BlackCapturedLabel.Location = New System.Drawing.Point(635, 93)
+        Me.BlackCapturedLabel.Name = "BlackCapturedLabel"
+        Me.BlackCapturedLabel.Size = New System.Drawing.Size(83, 13)
+        Me.BlackCapturedLabel.TabIndex = 5
+        Me.BlackCapturedLabel.Text = "Black Captured:"
+        '
+        'WhiteCapturedList
+        '
+        Me.WhiteCapturedList.AutoSize = True
+        Me.WhiteCapturedList.Location = New System.Drawing.Point(455, 126)
+        Me.WhiteCapturedList.Name = "WhiteCapturedList"
+        Me.WhiteCapturedList.Size = New System.Drawing.Size(27, 13)
+        Me.WhiteCapturedList.TabIndex = 6
+        Me.WhiteCapturedList.Text = "N/A"
+        '
+        'BlackCapturedList
+        '
+        Me.BlackCapturedList.AutoSize = True
+        Me.BlackCapturedList.Location = New System.Drawing.Point(635, 126)
+        Me.BlackCapturedList.Name = "BlackCapturedList"
+        Me.BlackCapturedList.Size = New System.Drawing.Size(27, 13)
+        Me.BlackCapturedList.TabIndex = 7
+        Me.BlackCapturedList.Text = "N/A"
+        '
         'GameView
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.BlackCapturedList)
+        Me.Controls.Add(Me.WhiteCapturedList)
+        Me.Controls.Add(Me.BlackCapturedLabel)
+        Me.Controls.Add(Me.WhiteCapturedLabel)
         Me.Controls.Add(Me.CurrentPlayerLabel)
         Me.Controls.Add(Me.RestartButton)
         Me.Controls.Add(Me.ExitButton)
@@ -82,4 +126,8 @@ Partial Class GameView
     Friend WithEvents ExitButton As Button
     Friend WithEvents RestartButton As Button
     Friend WithEvents CurrentPlayerLabel As Label
+    Friend WithEvents WhiteCapturedLabel As Label
+    Friend WithEvents BlackCapturedLabel As Label
+    Friend WithEvents WhiteCapturedList As Label
+    Friend WithEvents BlackCapturedList As Label
 End Class

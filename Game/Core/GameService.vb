@@ -133,6 +133,49 @@
         Debug.WriteLine("SetupInitialPiecesPosition: Initial pieces position setup complete")
     End Sub
 
+    Public Function SubstitutePieceKeyToFullName(pieceKey As String)
+        ' P for Pawn, R for Rook, N for Knight, B for Bishop, Q for Queen, K for King
+        ' Uppercase for white, lowercase for black
+
+        Select Case pieceKey
+            Case "P" : Return "Pawn"
+            Case "R" : Return "Rook"
+            Case "N" : Return "Knight"
+            Case "B" : Return "Bishop"
+            Case "Q" : Return "Queen"
+            Case "K" : Return "King"
+            Case "p" : Return "Pawn"
+            Case "r" : Return "Rook"
+            Case "n" : Return "Knight"
+            Case "b" : Return "Bishop"
+            Case "q" : Return "Queen"
+            Case "k" : Return "King"
+            Case Else : Return ""
+        End Select
+    End Function
+
+    Public Sub MapCapturedToLabelList()
+        Dim whiteListLabel = GameView.WhiteCapturedList
+        Dim blackListLabel = GameView.BlackCapturedList
+
+        ' map captured pieces to the respective label list and display the pieces name
+        ' it is a label not a list so we can't use AddRange
+
+        whiteListLabel.Text = ""
+
+        For Each piece As String In WhiteCapturedPieces
+            whiteListLabel.Text += SubstitutePieceKeyToFullName(piece) & " "
+        Next
+
+        blackListLabel.Text = ""
+        For Each piece As String In BlackCapturedPieces
+            blackListLabel.Text += SubstitutePieceKeyToFullName(piece) & " "
+        Next
+
+        Debug.WriteLine("MapCapturedToLabelList: Captured pieces mapped to the respective label list")
+
+    End Sub
+
     Public Sub DisposeGame()
         Debug.WriteLine("DisposeGame: Disposing the game")
 
@@ -215,6 +258,8 @@
                     Debug.WriteLine($"PictureBox_Click: Captured white piece: {currentPiece}")
                     WhiteCapturedPieces.Add(currentPiece)
                 End If
+
+                MapCapturedToLabelList()
 
                 UnhighlightPossibleMoves()
                 Player.SwitchPlayer()
@@ -3291,6 +3336,8 @@
             End While
 
         End If
+
+
     End Sub
 
     Public Sub UpdateCurrentPlayerLabel()

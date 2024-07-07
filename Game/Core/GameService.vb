@@ -206,6 +206,9 @@
         CurrentWhiteKingPosition = {7, 4}
         CurrentBlackKingPosition = {0, 4}
 
+        GameView.WhiteCapturedList.Text = "N/A"
+        GameView.BlackCapturedList.Text = "N/A"
+
         Debug.WriteLine("DisposeGame: Game disposed successfully")
     End Sub
 

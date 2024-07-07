@@ -18,6 +18,10 @@
     Public CurrentWhiteKingPosition() As Integer = {7, 4}
     Public CurrentBlackKingPosition() As Integer = {0, 4}
 
+    ' list that stores all pieces, the piece key and the location of the piece
+    ' piece key is the key of the piece, e.g. P for Pawn, R for Rook, N for Knight, B for Bishop, Q for Queen, K for King
+    Public AllPieces As New List(Of Tuple(Of String, String, Integer, Integer))
+
     Public Sub StartGame()
         Debug.WriteLine("StartGame: Starting the game")
 
@@ -48,6 +52,8 @@
             Dim row As Integer = i \ 8
             Dim col As Integer = i Mod 8
             Board(row, col) = initialSetup(i).ToString()
+
+            AllPieces.Add(New Tuple(Of String, String, Integer, Integer)(initialSetup(i).ToString(), initialSetup(i).ToString(), row, col))
 
             Debug.WriteLine($"SetupBoard: Setting up piece {initialSetup(i)} at ({row}, {col})")
         Next
@@ -209,6 +215,8 @@
         GameView.WhiteCapturedList.Text = "N/A"
         GameView.BlackCapturedList.Text = "N/A"
 
+        AllPieces.Clear()
+
         Debug.WriteLine("DisposeGame: Game disposed successfully")
     End Sub
 
@@ -261,6 +269,8 @@
                     Debug.WriteLine($"PictureBox_Click: Captured white piece: {currentPiece}")
                     WhiteCapturedPieces.Add(currentPiece)
                 End If
+
+                DetermineLastPiece()
 
                 MapCapturedToLabelList()
 
@@ -333,6 +343,40 @@
         End If
     End Sub
 
+    Public Sub DetermineAllPieces()
+        Dim whiteKingRow As Integer = CurrentWhiteKingPosition(0)
+        Dim whiteKingCol As Integer = CurrentWhiteKingPosition(1)
+
+        Dim blackKingRow As Integer = CurrentBlackKingPosition(0)
+        Dim blackKingCol As Integer = CurrentBlackKingPosition(1)
+
+        ' Determine all pieces on the board
+        ' check one by one for possible moves for each piece to determine if the king is in check
+        For Each piece In AllPieces
+            Dim pieceKey As String = piece.Item1
+            Dim pieceRow As Integer = piece.Item3
+            Dim pieceCol As Integer = piece.Item4
+
+            ' piece.Item1 is the piece key, e.g. P for Pawn, R for Rook, N for Knight, B for Bishop, Q for Queen, K for King
+            ' make sure to account for pieces that block the path of the attacking piece
+            ' if the king is in check, highlight the king in red
+            ' if the king is in checkmate, end the game
+            If pieceKey = "p" OrElse pieceKey = "P" Then
+                ' pawn
+            ElseIf pieceKey = "r" OrElse pieceKey = "R" Then
+                ' rook
+            ElseIf pieceKey = "n" OrElse pieceKey = "N" Then
+                ' knight
+            ElseIf pieceKey = "b" OrElse pieceKey = "B" Then
+                ' bishop
+            ElseIf pieceKey = "q" OrElse pieceKey = "Q" Then
+                ' queen
+            ElseIf pieceKey = "k" OrElse pieceKey = "K" Then
+                ' king
+            End If
+        Next
+    End Sub
+
     Public Sub DetermineLastPiece()
         Dim whiteKingRow As Integer = CurrentWhiteKingPosition(0)
         Dim whiteKingCol As Integer = CurrentWhiteKingPosition(1)
@@ -346,6 +390,9 @@
         Dim lastPiece As String = LastPieceMoved
 
         Debug.Write($"DetermineLastPiece: Determining the last piece moved: {lastPiece} at ({lastPieceRow}, {lastPieceCol})")
+
+        ' Determine the last piece moved
+        ' check the last piece possible moves for each piece to determine if the king is in check
 
         ' black queen (possible moves)
         If lastPiece = "q" Then
@@ -535,7 +582,6 @@
                 i += 1
             End While
         End If
-
 
     End Sub
 
@@ -3340,7 +3386,7 @@
 
         End If
 
-
+        AllPieces.RemoveAll(Function(x) x.Item1 = SelectedPiece)
     End Sub
 
     Public Sub UpdateCurrentPlayerLabel()

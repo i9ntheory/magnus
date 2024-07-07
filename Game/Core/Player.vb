@@ -4,7 +4,12 @@
         Black
     End Enum
 
+    Public Property PlayerTypeCompare As PlayerType
+
+    Public Property CurrentPlayerClass As Player
+
     Public Shared CurrentPlayer As PlayerType = PlayerType.White
+    Public Property CurrentPlayerProperty As PlayerType = PlayerType.White
 
     Public Shared Sub SwitchPlayer()
         If CurrentPlayer = PlayerType.White Then
@@ -13,4 +18,5 @@
             CurrentPlayer = PlayerType.White
         End If
     End Sub
+
 End Class

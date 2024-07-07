@@ -133,6 +133,39 @@
         Debug.WriteLine("SetupInitialPiecesPosition: Initial pieces position setup complete")
     End Sub
 
+    Public Sub DisposeGame()
+        Debug.WriteLine("DisposeGame: Disposing the game")
+
+        GameView.GamePanel.Controls.Clear()
+
+        For row As Integer = 0 To Rows - 1
+            For col As Integer = 0 To Cols - 1
+                Dim pb As PictureBox = PictureBoxes(row, col)
+                RemoveHandler pb.Click, AddressOf PictureBox_Click
+                GameView.GamePanel.Controls.Remove(pb)
+            Next
+        Next
+
+        Array.Clear(Board, 0, Board.Length)
+
+        WhiteCapturedPieces.Clear()
+        BlackCapturedPieces.Clear()
+
+        Player.CurrentPlayer = Player.PlayerType.White
+
+        SelectedPiece = Nothing
+        SelectedRow = -1
+        SelectedCol = -1
+
+        LastPieceMoved = Nothing
+        LastPieceMovedCurrentPosition = Nothing
+
+        CurrentWhiteKingPosition = {7, 4}
+        CurrentBlackKingPosition = {0, 4}
+
+        Debug.WriteLine("DisposeGame: Game disposed successfully")
+    End Sub
+
     Public Function GetPieceImage(piece As String) As Image
         Select Case piece
             Case "P" : Return My.Resources.WhitePawn
@@ -185,6 +218,7 @@
 
                 UnhighlightPossibleMoves()
                 Player.SwitchPlayer()
+
 
                 Return
             End If
@@ -453,6 +487,8 @@
                 i += 1
             End While
         End If
+
+
     End Sub
 
     Public Sub UnhighlightPossibleMoves()
@@ -3259,5 +3295,10 @@
 
     Public Sub UpdateCurrentPlayerLabel()
 
+        If Player.CurrentPlayer = Player.PlayerType.White Then
+            GameView.CurrentPlayerLabel.Text = $"Current: White"
+        Else
+            GameView.CurrentPlayerLabel.Text = $"Current: Black"
+        End If
     End Sub
 End Module

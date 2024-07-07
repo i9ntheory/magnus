@@ -17,6 +17,8 @@
         Else
             CurrentPlayer = PlayerType.White
         End If
+
+        UpdateCurrentPlayerLabel()
     End Sub
 
 End Class

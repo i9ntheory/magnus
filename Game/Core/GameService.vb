@@ -394,6 +394,763 @@
         ' Determine the last piece moved
         ' check the last piece possible moves for each piece to determine if the king is in check
 
+        ' white pawn (possible moves)
+        If lastPiece = "P" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is white pawn")
+
+            Dim direction As Integer = If(Player.CurrentPlayer = Player.PlayerType.White, -1, 1)
+            Dim targetRow As Integer = lastPieceRow + direction
+            Dim targetCol As Integer = lastPieceCol
+
+            If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                If targetRow = blackKingRow AndAlso targetCol = blackKingCol Then
+                    ' highlight the king in red
+                    PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                    MessageBox.Show("Check!")
+                End If
+            End If
+
+            targetCol = lastPieceCol - 1
+
+            If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                If targetRow = blackKingRow AndAlso targetCol = blackKingCol Then
+                    ' highlight the king in red
+                    PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                    MessageBox.Show("Check!")
+                End If
+            End If
+
+            targetCol = lastPieceCol + 1
+
+            If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                If targetRow = blackKingRow AndAlso targetCol = blackKingCol Then
+                    ' highlight the king in red
+                    PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                    MessageBox.Show("Check!")
+                End If
+            End If
+        End If
+
+        ' white rook (possible moves)
+        If lastPiece = "R" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is white rook")
+
+            ' Check moves to the right
+            For colIndex As Integer = lastPieceCol + 1 To Cols - 1
+                If Board(lastPieceRow, colIndex) = "." Then
+                    If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow, colIndex)) Then
+                        If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+            Next
+
+            ' Check moves to the left
+            For colIndex As Integer = lastPieceCol - 1 To 0 Step -1
+                If Board(lastPieceRow, colIndex) = "." Then
+                    If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow, colIndex)) Then
+                        If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+            Next
+
+            ' Check moves upwards
+            For colIndex As Integer = lastPieceRow - 1 To 0 Step -1
+                If Board(colIndex, lastPieceCol) = "." Then
+                    If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(colIndex, lastPieceCol)) Then
+                        If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+
+            Next
+
+            ' Check moves downwards
+            For colIndex As Integer = lastPieceRow + 1 To Rows - 1
+                If Board(colIndex, lastPieceCol) = "." Then
+                    If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(colIndex, lastPieceCol)) Then
+                        If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+
+            Next
+
+        End If
+
+        ' white knight (possible moves)
+        If lastPiece = "N" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is white knight")
+
+            Dim possibleMoves = New List(Of Point) From {
+                New Point(lastPieceRow - 2, lastPieceCol - 1),
+                New Point(lastPieceRow - 2, lastPieceCol + 1),
+                New Point(lastPieceRow - 1, lastPieceCol - 2),
+                New Point(lastPieceRow - 1, lastPieceCol + 2),
+                New Point(lastPieceRow + 1, lastPieceCol - 2),
+                New Point(lastPieceRow + 1, lastPieceCol + 2),
+                New Point(lastPieceRow + 2, lastPieceCol - 1),
+                New Point(lastPieceRow + 2, lastPieceCol + 1)
+            }
+
+            For Each move In possibleMoves
+                Dim targetRow As Integer = move.X
+                Dim targetCol As Integer = move.Y
+
+                If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                    If targetRow = blackKingRow AndAlso targetCol = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                End If
+            Next
+        End If
+
+        ' white bishop (possible moves)
+        If lastPiece = "B" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is white bishop")
+
+            ' Check moves to the top right
+            Dim i As Integer = 1
+            While lastPieceRow - i >= 0 AndAlso lastPieceCol + i < Cols
+                If Board(lastPieceRow - i, lastPieceCol + i) = "." Then
+                    If lastPieceRow - i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow - i, lastPieceCol + i)) Then
+                        If lastPieceRow - i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the top left
+            i = 1
+            While lastPieceRow - i >= 0 AndAlso lastPieceCol - i >= 0
+                If Board(lastPieceRow - i, lastPieceCol - i) = "." Then
+                    If lastPieceRow - i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow - i, lastPieceCol - i)) Then
+                        If lastPieceRow - i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom right
+            i = 1
+            While lastPieceRow + i < Rows AndAlso lastPieceCol + i < Cols
+                If Board(lastPieceRow + i, lastPieceCol + i) = "." Then
+                    If lastPieceRow + i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow + i, lastPieceCol + i)) Then
+                        If lastPieceRow + i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom left
+            i = 1
+            While lastPieceRow + i < Rows AndAlso lastPieceCol - i >= 0
+                If Board(lastPieceRow + i, lastPieceCol - i) = "." Then
+                    If lastPieceRow + i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow + i, lastPieceCol - i)) Then
+                        If lastPieceRow + i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+        End If
+
+        ' white king (possible moves)
+        If lastPiece = "K" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is white king")
+
+            Dim possibleMoves = New List(Of Point) From {
+                New Point(lastPieceRow - 1, lastPieceCol - 1),
+                New Point(lastPieceRow - 1, lastPieceCol),
+                New Point(lastPieceRow - 1, lastPieceCol + 1),
+                New Point(lastPieceRow, lastPieceCol - 1),
+                New Point(lastPieceRow, lastPieceCol + 1),
+                New Point(lastPieceRow + 1, lastPieceCol - 1),
+                New Point(lastPieceRow + 1, lastPieceCol),
+                New Point(lastPieceRow + 1, lastPieceCol + 1)
+            }
+
+            For Each move In possibleMoves
+                Dim targetRow As Integer = move.X
+                Dim targetCol As Integer = move.Y
+
+                If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                    If targetRow = blackKingRow AndAlso targetCol = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                End If
+            Next
+        End If
+
+        ' white queen (possible moves)
+        If lastPiece = "Q" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is white queen")
+
+            ' Check moves to the right
+            For colIndex As Integer = lastPieceCol + 1 To Cols - 1
+                If Board(lastPieceRow, colIndex) = "." Then
+                    If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow, colIndex)) Then
+                        If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+            Next
+
+            ' Check moves to the left
+            For colIndex As Integer = lastPieceCol - 1 To 0 Step -1
+                If Board(lastPieceRow, colIndex) = "." Then
+                    If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow, colIndex)) Then
+                        If colIndex = blackKingCol AndAlso lastPieceRow = blackKingRow Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+            Next
+
+            ' Check moves upwards
+            For colIndex As Integer = lastPieceRow - 1 To 0 Step -1
+                If Board(colIndex, lastPieceCol) = "." Then
+                    If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(colIndex, lastPieceCol)) Then
+                        If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+
+            Next
+
+            ' Check moves downwards
+            For colIndex As Integer = lastPieceRow + 1 To Rows - 1
+                If Board(colIndex, lastPieceCol) = "." Then
+                    If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(colIndex, lastPieceCol)) Then
+                        If colIndex = blackKingRow AndAlso lastPieceCol = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+
+            Next
+
+            ' Check moves to the top right
+            Dim i As Integer = 1
+            While lastPieceRow - i >= 0 AndAlso lastPieceCol + i < Cols
+                If Board(lastPieceRow - i, lastPieceCol + i) = "." Then
+                    If lastPieceRow - i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow - i, lastPieceCol + i)) Then
+                        If lastPieceRow - i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the top left
+            i = 1
+            While lastPieceRow - i >= 0 AndAlso lastPieceCol - i >= 0
+                If Board(lastPieceRow - i, lastPieceCol - i) = "." Then
+                    If lastPieceRow - i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow - i, lastPieceCol - i)) Then
+                        If lastPieceRow - i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom right
+            i = 1
+            While lastPieceRow + i < Rows AndAlso lastPieceCol + i < Cols
+                If Board(lastPieceRow + i, lastPieceCol + i) = "." Then
+                    If lastPieceRow + i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow + i, lastPieceCol + i)) Then
+                        If lastPieceRow + i = blackKingRow AndAlso lastPieceCol + i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom left
+            i = 1
+            While lastPieceRow + i < Rows AndAlso lastPieceCol - i >= 0
+                If Board(lastPieceRow + i, lastPieceCol - i) = "." Then
+                    If lastPieceRow + i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsLower(Board(lastPieceRow + i, lastPieceCol - i)) Then
+                        If lastPieceRow + i = blackKingRow AndAlso lastPieceCol - i = blackKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(blackKingRow, blackKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+        End If
+
+        ' black pawn (possible moves)
+        If lastPiece = "p" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is black pawn")
+
+            Dim direction As Integer = If(Player.CurrentPlayer = Player.PlayerType.White, -1, 1)
+            Dim targetRow As Integer = lastPieceRow + direction
+            Dim targetCol As Integer = lastPieceCol
+
+            If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                If targetRow = whiteKingRow AndAlso targetCol = whiteKingCol Then
+                    ' highlight the king in red
+                    PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                    MessageBox.Show("Check!")
+                End If
+            End If
+
+            targetCol = lastPieceCol - 1
+
+            If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                If targetRow = whiteKingRow AndAlso targetCol = whiteKingCol Then
+                    ' highlight the king in red
+                    PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                    MessageBox.Show("Check!")
+                End If
+            End If
+
+            targetCol = lastPieceCol + 1
+
+            If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                If targetRow = whiteKingRow AndAlso targetCol = whiteKingCol Then
+                    ' highlight the king in red
+                    PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                    MessageBox.Show("Check!")
+                End If
+            End If
+        End If
+
+        ' black rook (possible moves)
+        If lastPiece = "r" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is black rook")
+
+            ' Check moves to the right
+            For colIndex As Integer = lastPieceCol + 1 To Cols - 1
+                If Board(lastPieceRow, colIndex) = "." Then
+                    If colIndex = whiteKingCol AndAlso lastPieceRow = whiteKingRow Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(lastPieceRow, colIndex)) Then
+                        If colIndex = whiteKingCol AndAlso lastPieceRow = whiteKingRow Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+            Next
+
+            ' Check moves to the left
+            For colIndex As Integer = lastPieceCol - 1 To 0 Step -1
+                If Board(lastPieceRow, colIndex) = "." Then
+                    If colIndex = whiteKingCol AndAlso lastPieceRow = whiteKingRow Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(lastPieceRow, colIndex)) Then
+                        If colIndex = whiteKingCol AndAlso lastPieceRow = whiteKingRow Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+            Next
+
+            ' Check moves upwards
+            For colIndex As Integer = lastPieceRow - 1 To 0 Step -1
+                If Board(colIndex, lastPieceCol) = "." Then
+                    If colIndex = whiteKingRow AndAlso lastPieceCol = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(colIndex, lastPieceCol)) Then
+                        If colIndex = whiteKingRow AndAlso lastPieceCol = whiteKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+            Next
+
+            ' Check moves downwards
+            For colIndex As Integer = lastPieceRow + 1 To Rows - 1
+                If Board(colIndex, lastPieceCol) = "." Then
+                    If colIndex = whiteKingRow AndAlso lastPieceCol = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(colIndex, lastPieceCol)) Then
+                        If colIndex = whiteKingRow AndAlso lastPieceCol = whiteKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit For
+                    End If
+                End If
+
+            Next
+
+        End If
+
+        ' black knight (possible moves)
+        If lastPiece = "n" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is black knight")
+
+            Dim possibleMoves = New List(Of Point) From {
+                New Point(lastPieceRow - 2, lastPieceCol - 1),
+                New Point(lastPieceRow - 2, lastPieceCol + 1),
+                New Point(lastPieceRow - 1, lastPieceCol - 2),
+                New Point(lastPieceRow - 1, lastPieceCol + 2),
+                New Point(lastPieceRow + 1, lastPieceCol - 2),
+                New Point(lastPieceRow + 1, lastPieceCol + 2),
+                New Point(lastPieceRow + 2, lastPieceCol - 1),
+                New Point(lastPieceRow + 2, lastPieceCol + 1)
+            }
+
+            For Each move In possibleMoves
+                Dim targetRow As Integer = move.X
+                Dim targetCol As Integer = move.Y
+
+                If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                    If targetRow = whiteKingRow AndAlso targetCol = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                End If
+            Next
+        End If
+
+        ' black bishop (possible moves)
+        If lastPiece = "b" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is black bishop")
+
+            ' Check moves to the top right
+            Dim i As Integer = 1
+            While lastPieceRow - i >= 0 AndAlso lastPieceCol + i < Cols
+                If Board(lastPieceRow - i, lastPieceCol + i) = "." Then
+                    If lastPieceRow - i = whiteKingRow AndAlso lastPieceCol + i = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(lastPieceRow - i, lastPieceCol + i)) Then
+                        If lastPieceRow - i = whiteKingRow AndAlso lastPieceCol + i = whiteKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the top left
+            i = 1
+            While lastPieceRow - i >= 0 AndAlso lastPieceCol - i >= 0
+                If Board(lastPieceRow - i, lastPieceCol - i) = "." Then
+                    If lastPieceRow - i = whiteKingRow AndAlso lastPieceCol - i = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(lastPieceRow - i, lastPieceCol - i)) Then
+                        If lastPieceRow - i = whiteKingRow AndAlso lastPieceCol - i = whiteKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom right
+            i = 1
+            While lastPieceRow + i < Rows AndAlso lastPieceCol + i < Cols
+                If Board(lastPieceRow + i, lastPieceCol + i) = "." Then
+                    If lastPieceRow + i = whiteKingRow AndAlso lastPieceCol + i = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(lastPieceRow + i, lastPieceCol + i)) Then
+                        If lastPieceRow + i = whiteKingRow AndAlso lastPieceCol + i = whiteKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+            ' Check moves to the bottom left
+            i = 1
+            While lastPieceRow + i < Rows AndAlso lastPieceCol - i >= 0
+                If Board(lastPieceRow + i, lastPieceCol - i) = "." Then
+                    If lastPieceRow + i = whiteKingRow AndAlso lastPieceCol - i = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                Else
+                    If Char.IsUpper(Board(lastPieceRow + i, lastPieceCol - i)) Then
+                        If lastPieceRow + i = whiteKingRow AndAlso lastPieceCol - i = whiteKingCol Then
+                            ' highlight the king in red
+                            PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                            MessageBox.Show("Check!")
+                        End If
+                        Exit While
+                    End If
+                End If
+                i += 1
+            End While
+
+        End If
+
         ' black queen (possible moves)
         If lastPiece = "q" Then
             Debug.WriteLine("DetermineLastPiece: Last piece moved is black queen")
@@ -583,6 +1340,35 @@
             End While
         End If
 
+        ' black king (possible moves)
+        If lastPiece = "k" Then
+            Debug.WriteLine("DetermineLastPiece: Last piece moved is black king")
+
+            Dim possibleMoves = New List(Of Point) From {
+                New Point(lastPieceRow - 1, lastPieceCol - 1),
+                New Point(lastPieceRow - 1, lastPieceCol),
+                New Point(lastPieceRow - 1, lastPieceCol + 1),
+                New Point(lastPieceRow, lastPieceCol - 1),
+                New Point(lastPieceRow, lastPieceCol + 1),
+                New Point(lastPieceRow + 1, lastPieceCol - 1),
+                New Point(lastPieceRow + 1, lastPieceCol),
+                New Point(lastPieceRow + 1, lastPieceCol + 1)
+            }
+
+            For Each move In possibleMoves
+                Dim targetRow As Integer = move.X
+                Dim targetCol As Integer = move.Y
+
+                If targetRow >= 0 AndAlso targetRow < Rows AndAlso targetCol >= 0 AndAlso targetCol < Cols Then
+                    If targetRow = whiteKingRow AndAlso targetCol = whiteKingCol Then
+                        ' highlight the king in red
+                        PictureBoxes(whiteKingRow, whiteKingCol).BackColor = Color.Red
+
+                        MessageBox.Show("Check!")
+                    End If
+                End If
+            Next
+        End If
     End Sub
 
     Public Sub UnhighlightPossibleMoves()

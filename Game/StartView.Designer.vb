@@ -23,6 +23,7 @@ Partial Class StartView
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.StartPanel = New System.Windows.Forms.Panel()
+        Me.WhyNameLabel = New System.Windows.Forms.Label()
         Me.StartButton = New System.Windows.Forms.Button()
         Me.Authors2Label = New System.Windows.Forms.Label()
         Me.Authors1Label = New System.Windows.Forms.Label()
@@ -35,6 +36,7 @@ Partial Class StartView
         '
         'StartPanel
         '
+        Me.StartPanel.Controls.Add(Me.WhyNameLabel)
         Me.StartPanel.Controls.Add(Me.StartButton)
         Me.StartPanel.Controls.Add(Me.Authors2Label)
         Me.StartPanel.Controls.Add(Me.Authors1Label)
@@ -45,6 +47,17 @@ Partial Class StartView
         Me.StartPanel.Name = "StartPanel"
         Me.StartPanel.Size = New System.Drawing.Size(776, 379)
         Me.StartPanel.TabIndex = 2
+        '
+        'WhyNameLabel
+        '
+        Me.WhyNameLabel.AutoSize = True
+        Me.WhyNameLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.WhyNameLabel.Location = New System.Drawing.Point(36, 316)
+        Me.WhyNameLabel.Name = "WhyNameLabel"
+        Me.WhyNameLabel.Size = New System.Drawing.Size(600, 15)
+        Me.WhyNameLabel.TabIndex = 6
+        Me.WhyNameLabel.Text = "Kenapa Magnus? Karena terinspirasi dari nama Magnus Carlsen yang merupakan Grandm" &
+    "aster catur dunia."
         '
         'StartButton
         '
@@ -127,4 +140,5 @@ Partial Class StartView
     Friend WithEvents DescriptionLabel As Label
     Friend WithEvents TitleLabel As Label
     Friend WithEvents ImageLogo As PictureBox
+    Friend WithEvents WhyNameLabel As Label
 End Class

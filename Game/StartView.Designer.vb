@@ -76,7 +76,7 @@ Partial Class StartView
         Me.Authors2Label.Name = "Authors2Label"
         Me.Authors2Label.Size = New System.Drawing.Size(188, 15)
         Me.Authors2Label.TabIndex = 3
-        Me.Authors2Label.Text = "- 2311025 Raihan Pratama Putra"
+        Me.Authors2Label.Text = "- 2311003 Raihan Pratama Putra"
         '
         'Authors1Label
         '
